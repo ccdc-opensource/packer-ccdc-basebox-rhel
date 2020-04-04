@@ -38,6 +38,7 @@
       ],
       "boot_wait": "10s",
       "disk_size": "{{user `disk_size`}}",
+      "disk_adapter_type": "pvscsi",
       "guest_os_type": "centos-64",
       "headless": "{{ user `headless` }}",
       "http_directory": "{{user `http_directory`}}",
