@@ -24,7 +24,7 @@ elif [ "$major_version" -gt 5 ]; then # yum-utils isn't in RHEL 5 so don't try t
 fi
 
 # Remove development and kernel source packages
-$pkg_cmd -y remove gcc cpp kernel-devel kernel-headers;
+$pkg_cmd -y remove gcc cpp;
 
 # Clean up network interface persistence
 rm -f /etc/udev/rules.d/70-persistent-net.rules;
