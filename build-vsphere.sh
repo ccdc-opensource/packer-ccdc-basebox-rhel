@@ -19,7 +19,7 @@ source ./vsphere-environment-do-not-add
 
 echo 'creating output directory'
 mkdir -p output
-rm -rf ./output//packer-centos-8.2-x86_64-vmware
+rm -rf ./output//packer-centos-8-x86_64-vmware
 
 echo 'building base images'
 $PACKER build \
@@ -31,6 +31,6 @@ $PACKER build \
   -var 'cpus=2' \
   -var 'memory=4096' \
   -var 'vmx_remove_ethernet_interfaces=false' \
-  -var 'box_basename=ccdc-basebox/centos-8.2' \
-  ./centos-8.2-x86_64.json
+  -var 'box_basename=ccdc-basebox/centos-8' \
+  ./centos-8-x86_64.json
 
