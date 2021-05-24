@@ -187,7 +187,7 @@
       },
       {
         "datacenter": "{{user `vmware_center_datacenter`}}",
-        "folder": "/packer-templates/os/centos-7",
+        "folder": "/packer-templates/os/centos-8",
         "host": "{{user `vmware_center_host`}}",
         "insecure": true,
         "password": "{{user `vmware_center_password`}}",
