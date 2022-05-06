@@ -209,6 +209,7 @@
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
       "expect_disconnect": true,
       "scripts": [
+        "{{template_dir}}/scripts/enable_vault.sh",
         "{{template_dir}}/scripts/update.sh",
         "{{template_dir}}/scripts/motd.sh",
         "{{template_dir}}/scripts/sshd.sh",
