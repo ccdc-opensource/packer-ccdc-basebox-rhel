@@ -249,7 +249,7 @@
     "iso_name": "CentOS-8.5.2111-x86_64-dvd1.iso",
     "ks_path": "8/ks.cfg",
     "memory": "1024",
-    "mirror": "https://vault.centos.org/",
+    "mirror": "https://vault.centos.org",
     "mirror_directory": "8.5.2111/isos/x86_64",
     "name": "centos-8.5",
     "no_proxy": "{{env `no_proxy`}}",
