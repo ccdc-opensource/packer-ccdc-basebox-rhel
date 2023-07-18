@@ -19,18 +19,14 @@ source ./vsphere-environment-do-not-add
 
 echo 'creating output directory'
 mkdir -p output
-rm -rf ./output//packer-rocky-9-x86_64-vmware
+rm -rf ./output/packer-rocky-9-x86_64-vmware
 
 echo 'building base images'
-$PACKER build \
-  -only=vmware-iso \
-  -except=vagrant \
-  -var 'customise_for_buildmachine=1' \
+${PACKER} build \
+  -only=vsphere-iso.rocky-9 \
   -var 'build_directory=./output/' \
-  -var 'disk_size=400000' \
+  -var 'disk_size=150000' \
   -var 'cpus=2' \
   -var 'memory=4096' \
-  -var 'vmx_remove_ethernet_interfaces=false' \
   -var 'box_basename=ccdc-basebox/rocky-9' \
-  ./rocky-9-x86_64.json
-
+  ./rocky-9-x86_64.json.pkr.hcl

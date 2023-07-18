@@ -340,6 +340,41 @@ source "vmware-iso" "rocky-9" {
   // vmx_remove_ethernet_interfaces = "${var.vmx_remove_ethernet_interfaces}"
 }
 
+source "vsphere-iso" "rocky-9" {
+  boot_command         = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.ks_path}<enter><wait>"]
+  boot_wait            = "10s"
+  convert_to_template  = true
+  CPUs                 = "${var.cpus}"
+  // disk_adapter_type    = "pvscsi"
+  storage {
+      disk_size = "${var.disk_size}"
+      disk_thin_provisioned = true
+  }
+  guest_os_type        = "centos-64"
+  host                 = "${var.vmware_center_esxi_host}"
+  // headless             = "${var.headless}"
+  http_directory       = "${local.http_directory}"
+  iso_checksum         = "${var.iso_checksum_type}:${var.iso_checksum}"
+  iso_url              = "${var.mirror}/${var.mirror_directory}/${var.iso_name}"
+  RAM                  = "${var.memory}"
+  shutdown_command     = "echo 'vagrant' | sudo -S /sbin/halt -h -p"
+  ssh_password         = "vagrant"
+  ssh_port             = 22
+  ssh_timeout          = "10000s"
+  ssh_username         = "vagrant"
+  vm_name              = "${var.template}"
+  vcenter_server       = "${var.vmware_center_host}"
+  username             = "${var.vmware_center_username}"
+  password             = "${var.vmware_center_password}"
+  insecure_connection  = false
+  datacenter           = "${var.vmware_center_datacenter}"
+  datastore            = "${var.vmware_center_datastore}"
+  network_adapters {
+      network = "${var.vmware_center_vm_network}"
+      network_card = "vmxnet3"
+  }
+}
+
 # a build block invokes sources and runs provisioning steps on them. The
 # documentation for build blocks can be found here:
 # https://www.packer.io/docs/templates/hcl_templates/blocks/build
@@ -349,7 +384,8 @@ build {
     "source.parallels-iso.rocky-9",
     "source.qemu.rocky-9",
     "source.virtualbox-iso.rocky-9",
-    "source.vmware-iso.rocky-9"
+    "source.vmware-iso.rocky-9",
+    "source.vsphere-iso.rocky-9"
   ]
 
 
@@ -369,11 +405,13 @@ build {
   post-processors {
 
     post-processor "vagrant" {
+      except = ["vsphere-iso.rocky-9"]
       output = "${var.output_directory}/${ var.vagrant_box }.${ replace(replace(replace(source.type, "-iso", ""), "hyper-v", "hyperv"), "vmware", "vmware_desktop") }.box"
     }
 
     # Once box has been created, upload it to Artifactory
     post-processor "shell-local" {
+      except = ["vsphere-iso.rocky-9"]
       command = join(" ", [
         "jf rt upload",
         "--target-props \"box_name=${ var.vagrant_box };box_provider=${replace(replace(replace(source.type, "-iso", ""), "hyper-v", "hyperv"), "vmware", "vmware_desktop")};box_version=${ formatdate("YYYYMMDD", timestamp()) }.0\"",
