@@ -13,7 +13,7 @@ fi
 
 pushd $DIR
 
-BOX_NAME="ccdc-basebox/centos-8"
+BOX_NAME="ccdc-basebox/rocky-9"
 PROVIDER="virtualbox"
 BOX_VERSION="$(date +%Y%m%d).0"
 FILENAME=$BOX_NAME.$BOX_VERSION.$PROVIDER.box

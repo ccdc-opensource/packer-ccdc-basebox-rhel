@@ -14,7 +14,7 @@ echo 'creating output directory'
 mkdir -p output
 
 echo 'cleaning up intermediate output'
-rm -rf ./output//packer-centos-8-x86_64-vmware
+rm -rf ./output//packer-rocky-9-x86_64-vmware
 
 echo 'building base images'
 $PACKER build \
@@ -25,8 +25,8 @@ $PACKER build \
   -var 'cpus=2' \
   -var 'memory=4096' \
   -var 'vmx_remove_ethernet_interfaces=true' \
-  -var 'box_basename=ccdc-basebox/centos-8' \
-  ./centos-8-x86_64.json
+  -var 'box_basename=ccdc-basebox/rocky-9' \
+  ./rocky-9-x86_64.json.pkr.hcl
 
 
-mv output/ccdc-basebox/centos-8.vmware.box output/ccdc-basebox/centos-8.$(date +%Y%m%d).0.vmware_desktop.box
+mv output/ccdc-basebox/rocky-9.vmware.box output/ccdc-basebox/rocky-9.$(date +%Y%m%d).0.vmware_desktop.box

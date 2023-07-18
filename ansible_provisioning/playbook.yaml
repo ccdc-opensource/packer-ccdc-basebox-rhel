@@ -1,0 +1,17 @@
+---
+- hosts: all
+  gather_facts: yes
+  vars:
+    ansible_host_key_checking: false
+  roles:
+  - role: ccdc.vagrant-base-box
+    vars:
+      github_repo_name: packer-basebox-centos
+  - role: ccdc.install-vm-tools
+  - role: devsec.hardening.ssh_hardening
+    vars:
+      ssh_server_password_login: true
+      sshd_authenticationmethods: any
+  - role: ccdc.compact-vm-image
+    vars:
+      wipe_swap: false
