@@ -164,6 +164,12 @@ variable "vmware_center_datastore" {
   default = "${env("VMWARECENTER_DATASTORE")}"
 }
 
+
+variable "vmware_center_resource_pool" {
+  type    = string
+  default = "${env("VMWARECENTER_RESOURCEPOOL")}"
+}
+
 variable "vmware_center_esxi_host" {
   type    = string
   default = "${env("VMWARECENTER_ESXI_HOST")}"
@@ -341,18 +347,23 @@ source "vmware-iso" "rocky-9" {
 }
 
 source "vsphere-iso" "rocky-9" {
+  vcenter_server       = "${var.vmware_center_host}"
+  host                 = "${var.vmware_center_esxi_host}"
+  username             = "${var.vmware_center_username}"
+  password             = "${var.vmware_center_password}"
+  insecure_connection  = false
+  datacenter           = "${var.vmware_center_datacenter}"
+  datastore            = "${var.vmware_center_datastore}"
+  resource_pool        = "${var.vmware_center_resource_pool}"
   boot_command         = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.ks_path}<enter><wait>"]
   boot_wait            = "10s"
   convert_to_template  = true
   CPUs                 = "${var.cpus}"
-  // disk_adapter_type    = "pvscsi"
   storage {
       disk_size = "${var.disk_size}"
       disk_thin_provisioned = true
   }
   guest_os_type        = "centos-64"
-  host                 = "${var.vmware_center_esxi_host}"
-  // headless             = "${var.headless}"
   http_directory       = "${local.http_directory}"
   iso_checksum         = "${var.iso_checksum_type}:${var.iso_checksum}"
   iso_url              = "${var.mirror}/${var.mirror_directory}/${var.iso_name}"
@@ -363,12 +374,6 @@ source "vsphere-iso" "rocky-9" {
   ssh_timeout          = "10000s"
   ssh_username         = "vagrant"
   vm_name              = "${var.template}"
-  vcenter_server       = "${var.vmware_center_host}"
-  username             = "${var.vmware_center_username}"
-  password             = "${var.vmware_center_password}"
-  insecure_connection  = false
-  datacenter           = "${var.vmware_center_datacenter}"
-  datastore            = "${var.vmware_center_datastore}"
   network_adapters {
       network = "${var.vmware_center_vm_network}"
       network_card = "vmxnet3"
@@ -380,7 +385,7 @@ source "vsphere-iso" "rocky-9" {
 # https://www.packer.io/docs/templates/hcl_templates/blocks/build
 build {
   sources = [
-    "source.hyperv-iso.rocky-9",
+    // "source.hyperv-iso.rocky-9",
     "source.parallels-iso.rocky-9",
     "source.qemu.rocky-9",
     "source.virtualbox-iso.rocky-9",

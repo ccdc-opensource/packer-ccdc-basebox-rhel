@@ -3,11 +3,11 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 pushd $DIR
 
-if [[ -f /proc/version ]] && [[ "$( grep Microsoft /proc/version )" ]]; then
-  PACKER="packer.exe"
-else
-  PACKER="packer"
-fi
+# if [[ -f /proc/version ]] && [[ "$( grep Microsoft /proc/version )" ]]; then
+#   PACKER="packer.exe"
+# else
+PACKER="packer"
+# fi
 
 if [[ ! -e ./vsphere-environment-do-not-add ]]
 then
@@ -16,6 +16,7 @@ then
   return 1
 fi
 source ./vsphere-environment-do-not-add
+echo "Building on ${VMWARECENTER_HOST}"
 
 echo 'creating output directory'
 mkdir -p output

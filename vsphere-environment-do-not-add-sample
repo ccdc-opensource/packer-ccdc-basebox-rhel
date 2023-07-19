@@ -5,6 +5,8 @@ export VMWARECENTER_HOST=""
 export VMWARECENTER_VM_NAME="ccdc-basebox-rocky-9-$(date '+%Y-%m-%d-%H%M')"
 # The name of the datacenter, it's the child item under the root item in the Hosts and Clusters view in vSphere
 export VMWARECENTER_DATACENTER=""
+# The name of the resource pool to use
+export VMWARECENTER_RESOURCEPOOL=""
 # The cluster name, it's the child item under the datacenter  in the Hosts and Clusters view in vSphere
 export VMWARECENTER_CLUSTER_NAME=""
 # The name of the physical machine where the VM will be hosted
