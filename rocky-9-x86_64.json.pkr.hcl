@@ -354,16 +354,19 @@ source "vsphere-iso" "rocky-9" {
   insecure_connection  = false
   datacenter           = "${var.vmware_center_datacenter}"
   datastore            = "${var.vmware_center_datastore}"
-  resource_pool        = "${var.vmware_center_resource_pool}"
+  cluster              = "${var.vmware_center_cluster_name}"
   boot_command         = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.ks_path}<enter><wait>"]
+  http_port_max        = 65535
+  http_port_min        = 49152
   boot_wait            = "10s"
   convert_to_template  = true
   CPUs                 = "${var.cpus}"
+  disk_controller_type = ["pvscsi"]
   storage {
       disk_size = "${var.disk_size}"
       disk_thin_provisioned = true
   }
-  guest_os_type        = "centos-64"
+  guest_os_type        = "centos8_64Guest"
   http_directory       = "${local.http_directory}"
   iso_checksum         = "${var.iso_checksum_type}:${var.iso_checksum}"
   iso_url              = "${var.mirror}/${var.mirror_directory}/${var.iso_name}"
@@ -373,7 +376,7 @@ source "vsphere-iso" "rocky-9" {
   ssh_port             = 22
   ssh_timeout          = "10000s"
   ssh_username         = "vagrant"
-  vm_name              = "${var.template}"
+  vm_name              = "${var.vmware_center_vm_name}"
   network_adapters {
       network = "${var.vmware_center_vm_network}"
       network_card = "vmxnet3"
