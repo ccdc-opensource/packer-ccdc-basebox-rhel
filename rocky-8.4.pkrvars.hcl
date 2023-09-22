@@ -3,5 +3,7 @@ iso_checksum = "sha256:0de5f12eba93e00fefc06cdb0aa4389a0972a4212977362ea18bde46a
 vagrant_box = "ccdc-basebox/rocky-8.4"
 output_directory = "output/rocky-8.4/"
 kickstart_file = "/rocky-8/ks.cfg"
+// kickstart_file = "/rocky-8-vsphere/ks.cfg"
 vmware_guest_os_type = "centos-64"
 vsphere_guest_os_type = "rhel8_64Guest"
+vsphere_name = "ccdc-basebox-rocky-8.4"

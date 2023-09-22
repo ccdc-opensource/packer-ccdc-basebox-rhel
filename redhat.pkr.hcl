@@ -137,6 +137,7 @@ variable "iso_url" { type = string }
 variable "kickstart_file" { type = string }
 variable "vmware_guest_os_type" { type = string }
 variable "vsphere_guest_os_type" { type = string }
+variable "vsphere_name" { type = string }
 
 locals {
   http_directory  = "${path.root}/http"
@@ -161,7 +162,7 @@ source "hyperv-iso" "redhat" {
   ssh_timeout          = "10000s"
   ssh_username         = "vagrant"
   switch_name          = "${var.hyperv_switch}"
-  vm_name              = "{{build_name}}_base"
+  vm_name              = "${var.vsphere_name}-${formatdate("YYYYMMDD", timestamp())}"
 }
 
 source "virtualbox-iso" "redhat" {
@@ -197,7 +198,7 @@ source "virtualbox-iso" "redhat" {
     ["storagectl", "{{ .Name }}", "--name", "IDE Controller", "--remove"],
   ]
   virtualbox_version_file = ".vbox_version"
-  vm_name              = "{{build_name}}_base"
+  vm_name              = "${var.vsphere_name}-${formatdate("YYYYMMDD", timestamp())}"
 }
 
 source "vmware-iso" "redhat" {
@@ -219,7 +220,7 @@ source "vmware-iso" "redhat" {
   ssh_port             = 22
   ssh_timeout          = "10000s"
   ssh_username         = "vagrant"
-  vm_name              = "{{build_name}}_base"
+  vm_name              = "${var.vsphere_name}-${formatdate("YYYYMMDD", timestamp())}"
   vmx_data = {
     "cpuid.coresPerSocket" = "1"
     "disk.EnableUUID"      = "TRUE"
@@ -240,6 +241,8 @@ source "vsphere-iso" "redhat" {
   guest_os_type        = "${var.vsphere_guest_os_type}"
   host                 = "${var.vmware_center_esxi_host}"
   // headless             = "${var.headless}"
+  http_port_max        = 65535
+  http_port_min        = 49152
   http_directory       = "${local.http_directory}"
   iso_checksum         = "${var.iso_checksum}"
   iso_url              = "${var.iso_url}"
@@ -249,7 +252,7 @@ source "vsphere-iso" "redhat" {
   ssh_port             = 22
   ssh_timeout          = "10000s"
   ssh_username         = "vagrant"
-  vm_name              = "{{build_name}}_base"
+  vm_name              = "${var.vsphere_name}-${formatdate("YYYYMMDD", timestamp())}"
   vcenter_server       = "${var.vmware_center_host}"
   username             = "${var.vmware_center_username}"
   password             = "${var.vmware_center_password}"
