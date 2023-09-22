@@ -5,6 +5,18 @@ packer {
       version = ">= 1.0.0"
       source  = "github.com/hashicorp/vmware"
     }
+    vsphere = {
+      source  = "github.com/hashicorp/vsphere"
+      version = "~> 1"
+    }
+    ansible = {
+      source  = "github.com/hashicorp/ansible"
+      version = "~> 1"
+    }
+    vagrant = {
+      source  = "github.com/hashicorp/vagrant"
+      version = "~> 1"
+    }
   }
 }
 
@@ -18,54 +30,24 @@ variable "artifactory_username" {
   default = env("USER")
 }
 
-variable "box_basename" {
-  type    = string
-  default = "rocky-9"
-}
-
-variable "build_directory" {
-  type    = string
-  default = "../../builds"
-}
-
 variable "cpus" {
   type    = string
   default = "1"
 }
 
-variable "customise_for_buildmachine" {
+variable "memory" {
   type    = string
-  default = "0"
+  default = "1024"
 }
 
 variable "disk_size" {
   type    = string
-  default = "262144"
-}
-
-variable "git_revision" {
-  type    = string
-  default = "__unknown_git_revision__"
-}
-
-variable "guest_additions_url" {
-  type    = string
-  default = ""
+  default = "300000"
 }
 
 variable "headless" {
   type    = bool
   default = false
-}
-
-variable "http_proxy" {
-  type    = string
-  default = "${env("http_proxy")}"
-}
-
-variable "https_proxy" {
-  type    = string
-  default = "${env("https_proxy")}"
 }
 
 variable "hyperv_generation" {
@@ -78,64 +60,9 @@ variable "hyperv_switch" {
   default = "${env("hyperv_switch")}"
 }
 
-variable "iso_checksum" {
-  type    = string
-  default = "cd43bb2671472471b1fc0a7a30113dfc9a56831516c46f4dbd12fb43bb4286d2"
-}
-
-variable "iso_checksum_type" {
-  type    = string
-  default = "sha256"
-}
-
-variable "iso_name" {
-  type    = string
-  default = "Rocky-9.2-x86_64-dvd.iso"
-}
-
-variable "ks_path" {
-  type    = string
-  default = "/9/ks.cfg"
-}
-
-variable "memory" {
-  type    = string
-  default = "1024"
-}
-
-variable "mirror" {
-  type    = string
-  default = "https://mirrors.melbourne.co.uk"
-}
-
-variable "mirror_directory" {
-  type    = string
-  default = "rocky/9/isos/x86_64"
-}
-
-variable "name" {
-  type    = string
-  default = "rocky-9"
-}
-
-variable "no_proxy" {
-  type    = string
-  default = "${env("no_proxy")}"
-}
-
 variable "output_directory" {
   type    = string
   default = "${env("PWD")}/output/"
-}
-
-variable "template" {
-  type    = string
-  default = "rocky-9-x86_64"
-}
-
-variable "vagrant_box" {
-  type    = string
-  default = "ccdc-basebox/rocky-9"
 }
 
 variable "vagrant_user_final_password" {
@@ -162,12 +89,6 @@ variable "vmware_center_datacenter" {
 variable "vmware_center_datastore" {
   type    = string
   default = "${env("VMWARECENTER_DATASTORE")}"
-}
-
-
-variable "vmware_center_resource_pool" {
-  type    = string
-  default = "${env("VMWARECENTER_RESOURCEPOOL")}"
 }
 
 variable "vmware_center_esxi_host" {
@@ -205,84 +126,46 @@ variable "vmware_center_vm_network" {
   type    = string
   default = "${env("VMWARECENTER_VM_NETWORK")}"
 }
-# The "legacy_isotime" function has been provided for backwards compatability, but we recommend switching to the timestamp and formatdate functions.
 
-# All locals variables are generated from variables that uses expressions
-# that are not allowed in HCL2 variables.
-# Read the documentation for locals blocks here:
-# https://www.packer.io/docs/templates/hcl_templates/blocks/locals
+variable "vagrant_box" {
+  type    = string
+  default = "ccdc-basebox/redhat"
+}
+
+variable "iso_checksum" { type = string }
+variable "iso_url" { type = string }
+variable "kickstart_file" { type = string }
+variable "vmware_guest_os_type" { type = string }
+variable "vsphere_guest_os_type" { type = string }
+
 locals {
   http_directory  = "${path.root}/http"
 }
 
-# source blocks are generated from your builders; a source can be referenced in
-# build blocks. A build block runs provisioner and post-processors on a
-# source. Read the documentation for source blocks here:
-# https://www.packer.io/docs/templates/hcl_templates/blocks/source
-source "hyperv-iso" "rocky-9" {
+source "hyperv-iso" "redhat" {
   boot_command         = ["<wait5><tab> inst.text inst.ks=hd:fd0:/ks.cfg<enter><wait5><esc>"]
   boot_wait            = "10s"
   cpus                 = "${var.cpus}"
   disk_size            = "${var.disk_size}"
-  floppy_files         = ["${local.http_directory}/${var.ks_path}"]
+  floppy_files         = ["${local.http_directory}/${var.kickstart_file}"]
   generation           = "${var.hyperv_generation}"
   guest_additions_mode = "disable"
   http_directory       = "${local.http_directory}"
-  iso_checksum         = "${var.iso_checksum_type}:${var.iso_checksum}"
-  iso_url              = "${var.mirror}/${var.mirror_directory}/${var.iso_name}"
+  iso_checksum         = "${var.iso_checksum}"
+  iso_url              = "${var.iso_url}"
+  output_directory     = "${var.output_directory}"
   memory               = "${var.memory}"
-  output_directory     = "${var.build_directory}/packer-${var.template}-hyperv"
   shutdown_command     = "echo 'vagrant' | sudo -S /sbin/halt -h -p"
   ssh_password         = "vagrant"
   ssh_port             = 22
   ssh_timeout          = "10000s"
   ssh_username         = "vagrant"
   switch_name          = "${var.hyperv_switch}"
-  vm_name              = "${var.template}"
+  vm_name              = "{{build_name}}_base"
 }
 
-source "parallels-iso" "rocky-9" {
-  boot_command           = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.ks_path}<enter><wait>"]
-  boot_wait              = "10s"
-  cpus                   = "${var.cpus}"
-  disk_size              = "${var.disk_size}"
-  guest_os_type          = "centos"
-  http_directory         = "${local.http_directory}"
-  iso_checksum           = "${var.iso_checksum_type}:${var.iso_checksum}"
-  iso_url                = "${var.mirror}/${var.mirror_directory}/${var.iso_name}"
-  memory                 = "${var.memory}"
-  output_directory       = "${var.build_directory}/packer-${var.template}-parallels"
-  parallels_tools_flavor = "lin"
-  prlctl_version_file    = ".prlctl_version"
-  shutdown_command       = "echo 'vagrant' | sudo -S /sbin/halt -h -p"
-  ssh_password           = "vagrant"
-  ssh_port               = 22
-  ssh_timeout            = "10000s"
-  ssh_username           = "vagrant"
-  vm_name                = "${var.template}"
-}
-
-source "qemu" "rocky-9" {
-  boot_command     = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.ks_path}<enter><wait>"]
-  boot_wait        = "10s"
-  cpus             = "${var.cpus}"
-  disk_size        = "${var.disk_size}"
-  headless         = "${var.headless}"
-  http_directory   = "${local.http_directory}"
-  iso_checksum     = "${var.iso_checksum_type}:${var.iso_checksum}"
-  iso_url          = "${var.mirror}/${var.mirror_directory}/${var.iso_name}"
-  memory           = "${var.memory}"
-  output_directory = "${var.build_directory}/packer-${var.template}-qemu"
-  shutdown_command = "echo 'vagrant'|sudo -S /sbin/halt -h -p"
-  ssh_password     = "vagrant"
-  ssh_port         = 22
-  ssh_timeout      = "10000s"
-  ssh_username     = "vagrant"
-  vm_name          = "${var.template}"
-}
-
-source "virtualbox-iso" "rocky-9" {
-  boot_command            = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.ks_path}<enter><wait>"]
+source "virtualbox-iso" "redhat" {
+  boot_command            = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.kickstart_file}<enter><wait>"]
   boot_wait               = "10s"
   cpus                    = "${var.cpus}"
   disk_size               = "${var.disk_size}"
@@ -296,11 +179,11 @@ source "virtualbox-iso" "rocky-9" {
   hard_drive_discard      = "true"
   headless                = "${var.headless}"
   http_directory          = "${local.http_directory}"
-  iso_checksum            = "${var.iso_checksum_type}:${var.iso_checksum}"
-  iso_url                 = "${var.mirror}/${var.mirror_directory}/${var.iso_name}"
+  iso_checksum            = "${var.iso_checksum}"
+  iso_url                 = "${var.iso_url}"
   iso_interface           = "sata"
   memory                  = "${var.memory}"
-  output_directory        = "${var.build_directory}/packer-${var.template}-virtualbox"
+  output_directory        = "${var.output_directory}"
   shutdown_command        = "echo 'vagrant' | sudo -S /sbin/halt -h -p"
   ssh_password            = "vagrant"
   ssh_port                = 22
@@ -312,71 +195,68 @@ source "virtualbox-iso" "rocky-9" {
     ["modifyvm", "{{ .Name }}", "--accelerate3d", "on"],
     ["modifyvm", "{{ .Name }}", "--nat-localhostreachable1", "on"],
     ["storagectl", "{{ .Name }}", "--name", "IDE Controller", "--remove"],
-    // ["storageattach", "{{ .Name }}", "--storagectl", "SATA Controller", "--port", "1", "--device", "0", "--type", "dvddrive", "--medium", "emptydrive"],
   ]
   virtualbox_version_file = ".vbox_version"
-  vm_name                 = "${var.template}"
+  vm_name              = "{{build_name}}_base"
 }
 
-source "vmware-iso" "rocky-9" {
-  boot_command         = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.ks_path}<enter><wait>"]
+source "vmware-iso" "redhat" {
+  boot_command         = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.kickstart_file}<enter><wait>"]
   boot_wait            = "10s"
   cpus                 = "${var.cpus}"
   disk_adapter_type    = "pvscsi"
   disk_size            = "${var.disk_size}"
-  guest_os_type        = "centos-64"
+  guest_os_type        = "${var.vmware_guest_os_type}"
   headless             = "${var.headless}"
   http_directory       = "${local.http_directory}"
-  iso_checksum         = "${var.iso_checksum_type}:${var.iso_checksum}"
-  iso_url              = "${var.mirror}/${var.mirror_directory}/${var.iso_name}"
+  iso_checksum         = "${var.iso_checksum}"
+  iso_url              = "${var.iso_url}"
   memory               = "${var.memory}"
   network_adapter_type = "VMXNET3"
-  output_directory     = "${var.build_directory}/packer-${var.template}-vmware"
+  output_directory     = "${var.output_directory}"
   shutdown_command     = "echo 'vagrant' | sudo -S /sbin/halt -h -p"
   ssh_password         = "vagrant"
   ssh_port             = 22
   ssh_timeout          = "10000s"
   ssh_username         = "vagrant"
-  vm_name              = "${var.template}"
+  vm_name              = "{{build_name}}_base"
   vmx_data = {
     "cpuid.coresPerSocket" = "1"
     "disk.EnableUUID"      = "TRUE"
-    "virtualHW.version"    = "13"
   }
   // vmx_remove_ethernet_interfaces = "${var.vmx_remove_ethernet_interfaces}"
 }
 
-source "vsphere-iso" "rocky-9" {
-  vcenter_server       = "${var.vmware_center_host}"
-  host                 = "${var.vmware_center_esxi_host}"
-  username             = "${var.vmware_center_username}"
-  password             = "${var.vmware_center_password}"
-  insecure_connection  = false
-  datacenter           = "${var.vmware_center_datacenter}"
-  datastore            = "${var.vmware_center_datastore}"
-  cluster              = "${var.vmware_center_cluster_name}"
-  boot_command         = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.ks_path}<enter><wait>"]
-  http_port_max        = 65535
-  http_port_min        = 49152
+source "vsphere-iso" "redhat" {
+  boot_command         = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.kickstart_file}<enter><wait>"]
   boot_wait            = "10s"
   convert_to_template  = true
   CPUs                 = "${var.cpus}"
-  disk_controller_type = ["pvscsi"]
+  // disk_adapter_type    = "pvscsi"
   storage {
       disk_size = "${var.disk_size}"
       disk_thin_provisioned = true
   }
-  guest_os_type        = "centos8_64Guest"
+  guest_os_type        = "${var.vsphere_guest_os_type}"
+  host                 = "${var.vmware_center_esxi_host}"
+  // headless             = "${var.headless}"
   http_directory       = "${local.http_directory}"
-  iso_checksum         = "${var.iso_checksum_type}:${var.iso_checksum}"
-  iso_url              = "${var.mirror}/${var.mirror_directory}/${var.iso_name}"
+  iso_checksum         = "${var.iso_checksum}"
+  iso_url              = "${var.iso_url}"
   RAM                  = "${var.memory}"
   shutdown_command     = "echo 'vagrant' | sudo -S /sbin/halt -h -p"
   ssh_password         = "vagrant"
   ssh_port             = 22
   ssh_timeout          = "10000s"
   ssh_username         = "vagrant"
-  vm_name              = "${var.vmware_center_vm_name}"
+  vm_name              = "{{build_name}}_base"
+  vcenter_server       = "${var.vmware_center_host}"
+  username             = "${var.vmware_center_username}"
+  password             = "${var.vmware_center_password}"
+  insecure_connection  = false
+  datacenter           = "${var.vmware_center_datacenter}"
+  datastore            = "${var.vmware_center_datastore}"
+  cluster              = "${var.vmware_center_cluster_name}"
   network_adapters {
       network = "${var.vmware_center_vm_network}"
       network_card = "vmxnet3"
@@ -388,12 +268,10 @@ source "vsphere-iso" "rocky-9" {
 # https://www.packer.io/docs/templates/hcl_templates/blocks/build
 build {
   sources = [
-    // "source.hyperv-iso.rocky-9",
-    "source.parallels-iso.rocky-9",
-    "source.qemu.rocky-9",
-    "source.virtualbox-iso.rocky-9",
-    "source.vmware-iso.rocky-9",
-    "source.vsphere-iso.rocky-9"
+    // "source.hyperv-iso.redhat",
+    "source.virtualbox-iso.redhat",
+    "source.vmware-iso.redhat",
+    "source.vsphere-iso.redhat"
   ]
 
 
@@ -413,13 +291,13 @@ build {
   post-processors {
 
     post-processor "vagrant" {
-      except = ["vsphere-iso.rocky-9"]
+      except = ["vsphere-iso.redhat"]
       output = "${var.output_directory}/${ var.vagrant_box }.${ replace(replace(replace(source.type, "-iso", ""), "hyper-v", "hyperv"), "vmware", "vmware_desktop") }.box"
     }
 
     # Once box has been created, upload it to Artifactory
     post-processor "shell-local" {
-      except = ["vsphere-iso.rocky-9"]
+      except = ["vsphere-iso.redhat"]
       command = join(" ", [
         "jf rt upload",
         "--target-props \"box_name=${ var.vagrant_box };box_provider=${replace(replace(replace(source.type, "-iso", ""), "hyper-v", "hyperv"), "vmware", "vmware_desktop")};box_version=${ formatdate("YYYYMMDD", timestamp()) }.0\"",

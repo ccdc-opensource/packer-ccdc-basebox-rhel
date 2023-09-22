@@ -1,0 +1,7 @@
+iso_url = "https://mirrors.melbourne.co.uk/rocky/9/isos/x86_64/Rocky-9.2-x86_64-dvd.iso"
+iso_checksum = "sha256:cd43bb2671472471b1fc0a7a30113dfc9a56831516c46f4dbd12fb43bb4286d2"
+vagrant_box = "ccdc-basebox/rocky-9.2"
+output_directory = "output/rocky-9.2/"
+kickstart_file = "/rocky-9/ks.cfg"
+vmware_guest_os_type = "centos-64"
+vsphere_guest_os_type = "rockylinux_64Guest"
