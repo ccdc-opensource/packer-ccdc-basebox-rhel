@@ -3,11 +3,11 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 pushd $DIR
 
-if [[ -f /proc/version ]] && [[ "$( grep Microsoft /proc/version )" ]]; then
-  PACKER="packer.exe"
-else
-  PACKER="packer"
-fi
+# if [[ -f /proc/version ]] && [[ "$( grep Microsoft /proc/version )" ]]; then
+#   PACKER="packer.exe"
+# else
+PACKER="packer"
+# fi
 
 if [[ ! -e ./vsphere-environment-do-not-add ]]
 then
@@ -16,21 +16,18 @@ then
   return 1
 fi
 source ./vsphere-environment-do-not-add
+echo "Building on ${VMWARECENTER_HOST}"
 
 echo 'creating output directory'
 mkdir -p output
-rm -rf ./output//packer-centos-8-x86_64-vmware
+rm -rf ./output/packer-rocky-9-x86_64-vmware
 
 echo 'building base images'
-$PACKER build \
-  -only=vmware-iso \
-  -except=vagrant \
-  -var 'customise_for_buildmachine=1' \
+${PACKER} build \
+  -only=vsphere-iso.rocky-9 \
   -var 'build_directory=./output/' \
-  -var 'disk_size=400000' \
+  -var 'disk_size=150000' \
   -var 'cpus=2' \
   -var 'memory=4096' \
-  -var 'vmx_remove_ethernet_interfaces=false' \
-  -var 'box_basename=ccdc-basebox/centos-8' \
-  ./centos-8-x86_64.json
-
+  -var 'box_basename=ccdc-basebox/rocky-9' \
+  ./rocky-9-x86_64.json.pkr.hcl
