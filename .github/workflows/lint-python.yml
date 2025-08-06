@@ -12,7 +12,7 @@ jobs:
       changed-files: ${{ steps.file-changes.outputs.changed-files }}
     strategy:
       matrix:
-        python_version: ["3.9"]
+        python_version: ["3.11"]
 
     steps:
       - uses: actions/checkout@v4
@@ -44,7 +44,7 @@ jobs:
       - name: Lint Python
         uses: reviewdog/action-flake8@v3
         with:
-          fail_on_error: false
+          fail_level: none
           filter_mode: added
           level: error
           flake8_args: ${{ steps.file-changes.outputs.changed-files }}
