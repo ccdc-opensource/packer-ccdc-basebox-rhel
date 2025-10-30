@@ -208,7 +208,7 @@ source "vmware-iso" "redhat" {
 }
 
 source "vsphere-iso" "redhat" {
-  boot_command         = ["<up><wait><tab> inst.text inst.ks=hd:fd0:/${var.kickstart_file}<enter><wait>"]
+  boot_command         = ["<up><wait><tab> inst.text inst.ks=hd:fd0:/ks.cfg<enter><wait>"]
   boot_wait            = "10s"
   convert_to_template  = true
   CPUs                 = "${var.cpus}"
