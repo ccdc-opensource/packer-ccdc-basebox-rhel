@@ -208,7 +208,7 @@ source "vmware-iso" "redhat" {
 }
 
 source "vsphere-iso" "redhat" {
-  boot_command         = ["<up><wait><tab> inst.text inst.ks=hd:fd0:/ks.cfg<enter><wait>"]
+  boot_command         = ["<up><wait><tab> inst.text inst.ks=cdrom:/${var.kickstart_file}<enter><wait>"]
   boot_wait            = "10s"
   convert_to_template  = true
   CPUs                 = "${var.cpus}"
@@ -219,7 +219,7 @@ source "vsphere-iso" "redhat" {
   }
   guest_os_type        = "${var.vsphere_guest_os_type}"
   host                 = "${var.vmware_center_esxi_host}"
-  floppy_files         = ["${local.http_directory}/${var.kickstart_file}"]
+  cd_files             = ["${local.http_directory}/${var.kickstart_file}"]
   // headless             = "${var.headless}"
   http_port_max        = "${var.port_max}"
   http_port_min        = "${var.port_min}"
