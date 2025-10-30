@@ -165,39 +165,6 @@ source "hyperv-iso" "redhat" {
   vm_name              = "${var.vsphere_name}-${formatdate("YYYYMMDD", timestamp())}"
 }
 
-source "virtualbox-iso" "redhat" {
-  boot_command            = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.kickstart_file}<enter><wait>"]
-  boot_wait               = "10s"
-  cpus                    = "${var.cpus}"
-  disk_size               = "${var.disk_size}"
-  guest_additions_mode      = "disable"
-  guest_os_type           = "RedHat_64"
-  hard_drive_interface    = "sata"
-  hard_drive_nonrotational = "true"
-  hard_drive_discard      = "true"
-  headless                = "${var.headless}"
-  http_directory          = "${local.http_directory}"
-  iso_checksum            = "${var.iso_checksum}"
-  iso_url                 = "${var.iso_url}"
-  iso_interface           = "sata"
-  memory                  = "${var.memory}"
-  output_directory        = "${var.output_directory}"
-  shutdown_command        = "echo 'vagrant' | sudo -S /sbin/halt -h -p"
-  ssh_password            = "vagrant"
-  ssh_port                = 22
-  ssh_timeout             = "10000s"
-  ssh_username            = "vagrant"
-  vboxmanage              = [
-    ["modifyvm", "{{ .Name }}", "--clipboard-mode", "bidirectional"],
-    ["modifyvm", "{{ .Name }}", "--graphicscontroller", "vmsvga"],
-    ["modifyvm", "{{ .Name }}", "--accelerate3d", "on"],
-    ["modifyvm", "{{ .Name }}", "--nat-localhostreachable1", "on"],
-    ["storagectl", "{{ .Name }}", "--name", "IDE Controller", "--remove"],
-  ]
-  virtualbox_version_file = ".vbox_version"
-  vm_name              = "${var.vsphere_name}-${formatdate("YYYYMMDD", timestamp())}"
-}
-
 source "vmware-iso" "redhat" {
   boot_command         = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.kickstart_file}<enter><wait>"]
   boot_wait            = "10s"
