@@ -143,7 +143,7 @@ variable "port_max" {
 }
 
 variable "ipaddress" {
-  type    = number
+  type    = string
   default = "{{ .HTTPIP }}"
 }
 
