@@ -142,6 +142,11 @@ variable "port_max" {
   default = 65535
 }
 
+variable "ipaddress" {
+  type    = number
+  default = "{{ .HTTPIP }}"
+}
+
 variable "iso_checksum" { type = string }
 variable "iso_url" { type = string }
 variable "kickstart_file" { type = string }
@@ -176,7 +181,7 @@ source "hyperv-iso" "redhat" {
 }
 
 source "vmware-iso" "redhat" {
-  boot_command         = ["<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.kickstart_file}<enter><wait>"]
+  boot_command         = ["<up><wait><tab> inst.text inst.ks=http://${var.ipaddress}:{{ .HTTPPort }}/${var.kickstart_file}<enter><wait>"]
   boot_wait            = "10s"
   cpus                 = "${var.cpus}"
   disk_adapter_type    = "pvscsi"
