@@ -134,12 +134,12 @@ variable "vagrant_box" {
 
 variable "port_min" {
   type    = number
-  default = "49152"
+  default = 49152
 }
 
 variable "port_max" {
   type    = number
-  default = "65535"
+  default = 65535
 }
 
 variable "iso_checksum" { type = string }
