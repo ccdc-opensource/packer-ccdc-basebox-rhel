@@ -236,7 +236,6 @@ source "vsphere-iso" "redhat" {
 build {
   sources = [
     // "source.hyperv-iso.redhat",
-    "source.virtualbox-iso.redhat",
     "source.vmware-iso.redhat",
     "source.vsphere-iso.redhat"
   ]
