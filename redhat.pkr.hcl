@@ -132,6 +132,16 @@ variable "vagrant_box" {
   default = "ccdc-basebox/redhat"
 }
 
+variable "port_min" {
+  type    = number
+  default = "49152"
+}
+
+variable "port_max" {
+  type    = number
+  default = "65535"
+}
+
 variable "iso_checksum" { type = string }
 variable "iso_url" { type = string }
 variable "kickstart_file" { type = string }
@@ -205,8 +215,8 @@ source "vsphere-iso" "redhat" {
   guest_os_type        = "${var.vsphere_guest_os_type}"
   host                 = "${var.vmware_center_esxi_host}"
   // headless             = "${var.headless}"
-  http_port_max        = 65535
-  http_port_min        = 49152
+  http_port_max        = "${var.port_max}"
+  http_port_min        = "${var.port_min}"
   http_directory       = "${local.http_directory}"
   iso_checksum         = "${var.iso_checksum}"
   iso_url              = "${var.iso_url}"
