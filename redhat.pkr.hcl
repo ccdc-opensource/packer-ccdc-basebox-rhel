@@ -212,7 +212,7 @@ source "vsphere-iso" "redhat" {
   boot_wait            = "10s"
   convert_to_template  = true
   CPUs                 = "${var.cpus}"
-  disk_controller_type    = "pvscsi"
+  disk_controller_type = ["pvscsi"]
   storage {
       disk_size = "${var.disk_size}"
       disk_thin_provisioned = true
