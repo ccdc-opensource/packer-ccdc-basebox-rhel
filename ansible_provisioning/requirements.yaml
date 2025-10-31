@@ -3,7 +3,6 @@ roles:
   - src: git@github.com:ccdc-opensource/ansible-role-vagrant-base-box
     scm: git
     name: ccdc.vagrant-base-box
-    version: fix-motd-rocky
   - src: git@github.com:ccdc-opensource/ansible-role-install-vm-tools
     scm: git
     name: ccdc.install-vm-tools
@@ -13,3 +12,5 @@ roles:
 
 collections:
   - devsec.hardening
+  - name: community.crypto
+    version: <3.0.0
