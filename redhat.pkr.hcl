@@ -146,7 +146,14 @@ variable "ipaddress" {
   type    = string
   default = "{{ .HTTPIP }}"
 }
-
+variable "ansible_playbook_file" {
+  type    = string
+  default = "ansible_provisioning/playbook.yaml"
+}
+variable "ansible_requirements_file" {
+  type    = string
+  default = "ansible_provisioning/requirements.yaml"
+}
 variable "iso_checksum" { type = string }
 variable "iso_url" { type = string }
 variable "kickstart_file" { type = string }
@@ -258,8 +265,8 @@ build {
 
 
   provisioner "ansible" {
-    playbook_file = "./ansible_provisioning/playbook.yaml"
-    galaxy_file = "./ansible_provisioning/requirements.yaml"
+    playbook_file = "${var.ansible_playbook_file}"
+    galaxy_file = "${var.ansible_requirements_file}"
     roles_path = "./ansible_provisioning/roles"
     galaxy_force_install = true
     user            = "vagrant"
