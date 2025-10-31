@@ -154,6 +154,10 @@ variable "ansible_requirements_file" {
   type    = string
   default = "ansible_provisioning/requirements.yaml"
 }
+variable "ansible_roles_path" {
+  type    = string
+  default = "ansible_provisioning/roles"
+}
 variable "iso_checksum" { type = string }
 variable "iso_url" { type = string }
 variable "kickstart_file" { type = string }
@@ -267,7 +271,7 @@ build {
   provisioner "ansible" {
     playbook_file = "${var.ansible_playbook_file}"
     galaxy_file = "${var.ansible_requirements_file}"
-    roles_path = "./ansible_provisioning/roles"
+    roles_path = "${var.ansible_roles_path}"
     galaxy_force_install = true
     user            = "vagrant"
     use_proxy       = false
