@@ -12,3 +12,5 @@ roles:
 
 collections:
   - devsec.hardening
+  - name: community.crypto
+    version: <3.0.0
