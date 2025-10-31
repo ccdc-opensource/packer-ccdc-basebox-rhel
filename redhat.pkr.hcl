@@ -265,8 +265,8 @@ build {
 
 
   provisioner "ansible" {
-    playbook_file = "${var.ansible_playbook_file}"
-    galaxy_file = "${var.ansible_requirements_file}"
+    playbook_file = "var.ansible_playbook_file"
+    galaxy_file = "var.ansible_requirements_file"
     roles_path = "./ansible_provisioning/roles"
     galaxy_force_install = true
     user            = "vagrant"
