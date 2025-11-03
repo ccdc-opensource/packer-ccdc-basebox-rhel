@@ -219,6 +219,7 @@ source "vmware-iso" "redhat" {
 }
 
 source "vsphere-iso" "redhat" {
+  #boot_command         = ["<up><wait><tab> inst.text inst.ks=http://${var.ipaddress}:{{ .HTTPPort }}/${var.kickstart_file}<enter><wait>"]
   boot_command         = ["<up><wait><tab> inst.text inst.ks=cdrom:/ks.cfg<enter><wait>"]
   boot_wait            = "10s"
   convert_to_template  = true
