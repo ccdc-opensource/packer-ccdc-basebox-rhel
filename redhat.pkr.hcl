@@ -146,7 +146,18 @@ variable "ipaddress" {
   type    = string
   default = "{{ .HTTPIP }}"
 }
-
+variable "ansible_playbook_file" {
+  type    = string
+  default = "ansible_provisioning/playbook.yaml"
+}
+variable "ansible_requirements_file" {
+  type    = string
+  default = "ansible_provisioning/requirements.yaml"
+}
+variable "ansible_roles_path" {
+  type    = string
+  default = "ansible_provisioning/roles"
+}
 variable "iso_checksum" { type = string }
 variable "iso_url" { type = string }
 variable "kickstart_file" { type = string }
@@ -159,7 +170,7 @@ locals {
 }
 
 source "hyperv-iso" "redhat" {
-  boot_command         = ["<wait5><tab> inst.text inst.ks=hd:fd0:/ks.cfg<enter><wait5><esc>"]
+  boot_command         = ["<wait5><tab> inst.text inst.ks=hd:fd0:/${var.kickstart_file}<enter><wait5><esc>"]
   boot_wait            = "10s"
   cpus                 = "${var.cpus}"
   disk_size            = "${var.disk_size}"
@@ -184,7 +195,7 @@ source "vmware-iso" "redhat" {
   boot_command         = ["<up><wait><tab> inst.text inst.ks=http://${var.ipaddress}:{{ .HTTPPort }}/${var.kickstart_file}<enter><wait>"]
   boot_wait            = "10s"
   cpus                 = "${var.cpus}"
-  disk_adapter_type    = "pvscsi"
+  disk_controller_type = "pvscsi"
   disk_size            = "${var.disk_size}"
   guest_os_type        = "${var.vmware_guest_os_type}"
   headless             = "${var.headless}"
@@ -208,17 +219,19 @@ source "vmware-iso" "redhat" {
 }
 
 source "vsphere-iso" "redhat" {
-  boot_command         = ["<up><wait><tab> inst.text inst.ks=http://${var.ipaddress}:{{ .HTTPPort }}/${var.kickstart_file}<enter><wait>"]
+  #boot_command         = ["<up><wait><tab> inst.text inst.ks=http://${var.ipaddress}:{{ .HTTPPort }}/${var.kickstart_file}<enter><wait>"]
+  boot_command         = ["<up><wait><tab> inst.text inst.ks=cdrom:/ks.cfg<enter><wait>"]
   boot_wait            = "10s"
   convert_to_template  = true
   CPUs                 = "${var.cpus}"
-  // disk_adapter_type    = "pvscsi"
+  disk_controller_type = ["pvscsi"]
   storage {
       disk_size = "${var.disk_size}"
       disk_thin_provisioned = true
   }
   guest_os_type        = "${var.vsphere_guest_os_type}"
   host                 = "${var.vmware_center_esxi_host}"
+  cd_files             = ["${local.http_directory}/${var.kickstart_file}"]
   // headless             = "${var.headless}"
   http_port_max        = "${var.port_max}"
   http_port_min        = "${var.port_min}"
@@ -257,9 +270,9 @@ build {
 
 
   provisioner "ansible" {
-    playbook_file = "./ansible_provisioning/playbook.yaml"
-    galaxy_file = "./ansible_provisioning/requirements.yaml"
-    roles_path = "./ansible_provisioning/roles"
+    playbook_file = "${var.ansible_playbook_file}"
+    galaxy_file = "${var.ansible_requirements_file}"
+    roles_path = "${var.ansible_roles_path}"
     galaxy_force_install = true
     user            = "vagrant"
     use_proxy       = false
