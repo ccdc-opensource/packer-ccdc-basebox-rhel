@@ -255,6 +255,8 @@ source "vsphere-iso" "redhat" {
   network_adapters {
       network = "${var.vmware_center_vm_network}"
       network_card = "vmxnet3"
+      connected = true
+      start_connected = true
   }
 }
 
