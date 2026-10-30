@@ -15,3 +15,24 @@
     - role: ccdc.compact-vm-image
       vars:
         wipe_swap: false
+
+  post_tasks:
+    # We have to do this as devsec hardening restarts ssh and requires host keys
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+
+    - name: Find SSH host key material
+      ansible.builtin.find:
+        paths: /etc/ssh
+        patterns: ssh_host_*
+      register: find_ssh_host_keys
+      become: true
+
+    - name: Remove SSH host key material
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ find_ssh_host_keys.files }}"
+      loop_control:
+        label: "{{ item.path }}"
+      become: true
