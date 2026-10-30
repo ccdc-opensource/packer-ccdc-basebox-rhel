@@ -103,6 +103,8 @@ build {
       "-v",
       "-e",
       "ansible_ssh_password=vagrant",
+      "-e",
+      "ansible_python_interpreter=${var.ansible_python_interpreter}",
     ]
   }
 }

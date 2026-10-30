@@ -98,3 +98,8 @@ variable "ansible_roles_path" {
   type    = string
   default = "../ansible_provisioning/roles"
 }
+
+variable "ansible_python_interpreter" {
+  type    = string
+  default = "auto"
+}
