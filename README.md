@@ -28,7 +28,7 @@ For Ubuntu 24.04, including WSL, install the prerequisites with:
 
 ```sh
 sudo apt update
-sudo apt install -y ansible ca-certificates curl git gnupg python3.15 python3.15-venv sshpass xorriso
+sudo apt install -y ansible ca-certificates curl git gnupg python3.12 python3.12-venv sshpass xorriso
 ```
 
 Then install Packer using the [official installation instructions](https://developer.hashicorp.com/packer/install).
@@ -37,10 +37,10 @@ Rocky 8's system DNF bindings use Python 3.6, which recent ansible-core releases
 not support. Use an isolated ansible-core 2.16 environment for Rocky 8 as it supports
 Python 3.6 targets but is end-of-life and no longer receives security fixes.
 
-On your host, install Python 3.15 with virtual environment support, then run the below, once complete you can deactivate:
+On your host, install Python 3.12 with virtual environment support, then run the below, once complete you can deactivate:
 
 ```sh
-python3.15 -m venv "$HOME/packer_ansible_env"
+python3.12 -m venv "$HOME/packer_ansible_env"
 . "$HOME/packer_ansible_env/bin/activate"
 python -m pip install 'ansible-core>=2.16,<2.17'
 ```
