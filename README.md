@@ -88,6 +88,6 @@ This repository simply taylors what's there to our needs (larger hard drive, box
 
 You should have a working understanding of [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) as they are used to pull the packer definitions from bento.
 
-Why Packer? https://www.packer.io/intro/why.html
+Why Packer? <https://www.packer.io/intro/why.html>
 
-Packer documentation: https://www.packer.io/docs/index.html
+Packer documentation: <https://www.packer.io/docs/index.html>
