@@ -19,6 +19,54 @@ Once these are installed, open a command line window, cd in this directory and e
 build-virtualbox.sh
 build-vmware.sh
 
+## Proxmox Rocky templates
+
+Run Packer from the `proxmox` directory on a Linux or macOS machine with Ansible,
+`ansible-galaxy`, `sshpass`, Git and an ISO creation tool such as `xorriso` installed.
+
+For Ubuntu 24.04, including WSL, install the prerequisites with:
+
+```sh
+sudo apt update
+sudo apt install -y ansible ca-certificates curl git gnupg python3.15 python3.15-venv sshpass xorriso
+```
+
+Then install Packer using the [official installation instructions](https://developer.hashicorp.com/packer/install).
+
+Rocky 8's system DNF bindings use Python 3.6, which recent ansible-core releases do
+not support. Use an isolated ansible-core 2.16 environment for Rocky 8 as it supports
+Python 3.6 targets but is end-of-life and no longer receives security fixes.
+
+On your host, install Python 3.15 with virtual environment support, then run the below, once complete you can deactivate:
+
+```sh
+python3.15 -m venv "$HOME/packer_ansible_env"
+. "$HOME/packer_ansible_env/bin/activate"
+python -m pip install 'ansible-core>=2.16,<2.17'
+```
+
+You will need to set `PROXMOX_URL` to the Proxmox API URL ending in `/api2/json`,
+`PROXMOX_USERNAME` to `user@realm!token-id`, and `PROXMOX_TOKEN` to the token
+secret, ensure the api token has the rights to the infrastructure. Configure `node_name`, `storage_pool`, `iso_storage_pool`, and
+`network_bridge` for your environment with Packer `-var` arguments or a separate
+variables file. The disk storage must support raw images by default; the ISO
+storage must support ISO images. Set `insecure_skip_tls_verify` only if needed
+for a trusted Proxmox server with a self-signed certificate.
+
+Download the Rocky Linux 8.10 and 9.8 minimal ISOs from the
+[Rocky Linux downloads](https://rockylinux.org/download) page and upload them to
+ISO-enabled storage on Proxmox. Set `iso_file` to the corresponding Proxmox ISO
+volume ID for each build, replacing the example paths below as needed.
+
+```sh
+cd proxmox
+packer init .
+packer validate -var-file=rocky8.pkrvars.hcl -var='node_name=your-node' -var='iso_file=<storage>:iso/Rocky-8.10-x86_64-minimal.iso' .
+packer build -var-file=rocky8.pkrvars.hcl -var='node_name=your-node' -var='insecure_skip_tls_verify=true' -var='storage_pool=<storage>' -var='iso_file=<storage>:iso/Rocky-8.10-x86_64-minimal.iso' .
+deactivate
+packer build -var-file=rocky9.pkrvars.hcl -var='node_name=your-node' -var='insecure_skip_tls_verify=true' -var='storage_pool=<storage>' -var='iso_file=<storage>:iso/Rocky-9.8-x86_64-minimal.iso' .
+```
+
 ## How do I make the boxes available?
 
 In order to make an updated box available, you should upload it to the ccdc-vagrant-repo repository in artifactory
