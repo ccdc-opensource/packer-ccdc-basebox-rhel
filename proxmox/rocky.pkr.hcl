@@ -79,7 +79,7 @@ build {
       "case \"$ID:$VERSION_ID\" in rocky:8|rocky:8.*)",
       "  echo 'Rocky 8 DNF diagnostics:'",
       "  rpm -q python3-dnf || true",
-      "  for python in /usr/libexec/platform-python /usr/bin/python3 /usr/bin/python /usr/bin/python3.11; do",
+      "  for python in /usr/libexec/platform-python /usr/bin/python3 /usr/bin/python; do",
       "    echo \"Checking $python\"",
       "    if [ -x \"$python\" ]; then",
       "      \"$python\" -c 'import sys; print(sys.version); import dnf; print(dnf.__file__)' 2>&1 || true",
