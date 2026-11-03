@@ -3,8 +3,7 @@
 This packer template creates a basic centos 8 box with a predefined administrator user called vagrant, based on the bento boxes.
 The value of these images lies in the larger default size, a requirement given the amount of disk space consumed by our builds.
 
-The scripts in this repository are date based. They will create and upload images with version number (current date).0.
-It is therefore necessary to run them on the same day.
+The build scripts create images with version number (current date).0.
 
 ## How do I use this?
 
@@ -66,20 +65,6 @@ packer build -var-file=rocky8.pkrvars.hcl -var='node_name=your-node' -var='insec
 deactivate
 packer build -var-file=rocky9.pkrvars.hcl -var='node_name=your-node' -var='insecure_skip_tls_verify=true' -var='storage_pool=<storage>' -var='iso_file=<storage>:iso/Rocky-9.8-x86_64-minimal.iso' .
 ```
-
-## How do I make the boxes available?
-
-In order to make an updated box available, you should upload it to the ccdc-vagrant-repo repository in artifactory
-To do that, you first need to find out your api key. Head to [artifactory](https://artifactory.ccdc.cam.ac.uk/) and log in.
-Sekect the ccdc-vagrant repository in the Set me up box on the main page. A dialog will pop up with a password box. Enter your password in the password box.
-The curl url in the Deploy section will be updated with your api key. It's the string appearing after X-JFrog-Art-Api:
-If the curl url doesn't have an X-JFrog-Art-Api: username but uses your username instead, click on the Welcome, (username) button on the top right corner in artifactory, and select 'Edit Profile', then unlock your profile and generate an API key.
-
-Copy that key and run in a shell
-
-  export ARTIFACTORY_API_KEY='key'
-
-After that, run one or both scripts called upload-virtualbox.sh and upload-vmware.sh
 
 ## Where do I begin stydying this?
 

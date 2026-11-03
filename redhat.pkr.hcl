@@ -20,16 +20,6 @@ packer {
   }
 }
 
-variable "artifactory_api_key" {
-  type    = string
-  default = env("ARTIFACTORY_API_KEY")
-}
-
-variable "artifactory_username" {
-  type    = string
-  default = env("USER")
-}
-
 variable "cpus" {
   type    = string
   default = "1"
@@ -289,19 +279,5 @@ build {
       output = "${var.output_directory}/${ var.vagrant_box }.${ replace(replace(replace(source.type, "-iso", ""), "hyper-v", "hyperv"), "vmware", "vmware_desktop") }.box"
     }
 
-    # Once box has been created, upload it to Artifactory
-    post-processor "shell-local" {
-      except = ["vsphere-iso.redhat"]
-      command = join(" ", [
-        "jf rt upload",
-        "--target-props \"box_name=${ var.vagrant_box };box_provider=${replace(replace(replace(source.type, "-iso", ""), "hyper-v", "hyperv"), "vmware", "vmware_desktop")};box_version=${ formatdate("YYYYMMDD", timestamp()) }.0\"",
-        "--retries 10",
-        "--access-token ${ var.artifactory_api_key }",
-        "--user ${ var.artifactory_username }",
-        "--url \"https://artifactory.ccdc.cam.ac.uk/artifactory\"",
-        "${var.output_directory}/${var.vagrant_box}.${replace(replace(replace(source.type, "-iso", ""), "hyper-v", "hyperv"), "vmware", "vmware_desktop")}.box",
-        "ccdc-vagrant-repo/${var.vagrant_box}.${formatdate("YYYYMMDD", timestamp())}.0.${replace(replace(replace(source.type, "-iso", ""), "hyper-v", "hyperv"), "vmware", "vmware_desktop")}.box"
-      ])
-    }
   }
 }
