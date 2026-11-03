@@ -68,13 +68,13 @@ With the Rocky 8 Ansible environment active, initialize and build Rocky 8:
 cd proxmox
 packer init .
 packer validate -var-file=rocky8.pkrvars.hcl \
-	-var='node_name=<node>' -var='storage_pool=<disk-storage>' \
-	-var='iso_storage_pool=<iso-storage>' -var='insecure_skip_tls_verify=true' \
-	-var='iso_file=<iso-storage>:iso/Rocky-8.10-x86_64-minimal.iso' .
+ -var='node_name=<node>' -var='storage_pool=<disk-storage>' \
+ -var='iso_storage_pool=<iso-storage>' -var='insecure_skip_tls_verify=true' \
+ -var='iso_file=<iso-storage>:iso/Rocky-8.10-x86_64-minimal.iso' .
 packer build -var-file=rocky8.pkrvars.hcl \
-	-var='node_name=<node>' -var='storage_pool=<disk-storage>' \
-	-var='iso_storage_pool=<iso-storage>' -var='insecure_skip_tls_verify=true' \
-	-var='iso_file=<iso-storage>:iso/Rocky-8.10-x86_64-minimal.iso' .
+ -var='node_name=<node>' -var='storage_pool=<disk-storage>' \
+ -var='iso_storage_pool=<iso-storage>' -var='insecure_skip_tls_verify=true' \
+ -var='iso_file=<iso-storage>:iso/Rocky-8.10-x86_64-minimal.iso' .
 ```
 
 Deactivate the Rocky 8 environment, then validate and build Rocky 9 using an
@@ -83,13 +83,14 @@ appropriate host Ansible installation:
 ```sh
 deactivate
 packer validate -var-file=rocky9.pkrvars.hcl \
-	-var='node_name=<node>' -var='storage_pool=<disk-storage>' \
-	-var='iso_storage_pool=<iso-storage>' -var='insecure_skip_tls_verify=true' \
-	-var='iso_file=<iso-storage>:iso/Rocky-9.8-x86_64-minimal.iso' .
+ -var='node_name=<node>' -var='storage_pool=<disk-storage>' \
+ -var='iso_storage_pool=<iso-storage>' -var='insecure_skip_tls_verify=true' \
+ -var='iso_file=<iso-storage>:iso/Rocky-9.8-x86_64-minimal.iso' .
+
 packer build -var-file=rocky9.pkrvars.hcl \
-	-var='node_name=<node>' -var='storage_pool=<disk-storage>' \
-	-var='iso_storage_pool=<iso-storage>' -var='insecure_skip_tls_verify=true' \
-	-var='iso_file=<iso-storage>:iso/Rocky-9.8-x86_64-minimal.iso' .
+ -var='node_name=<node>' -var='storage_pool=<disk-storage>' \
+ -var='iso_storage_pool=<iso-storage>' -var='insecure_skip_tls_verify=true' \
+ -var='iso_file=<iso-storage>:iso/Rocky-9.8-x86_64-minimal.iso' .
 ```
 
 The installer uses DHCP, disables the firewall, sets SELinux to permissive and
