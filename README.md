@@ -66,7 +66,7 @@ deactivate
 packer build -var-file=rocky9.pkrvars.hcl -var='node_name=your-node' -var='insecure_skip_tls_verify=true' -var='storage_pool=<storage>' -var='iso_file=<storage>:iso/Rocky-9.8-x86_64-minimal.iso' .
 ```
 
-## Where do I begin stydying this?
+## Where do I begin studying this?
 
 The [documentation on the bento repository](https://github.com/chef/bento) provides some insight on the process.
 This repository simply taylors what's there to our needs (larger hard drive, boxes for vmware and virtualbox).
