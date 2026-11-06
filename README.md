@@ -107,13 +107,13 @@ export PROXMOX_TOKEN
 cd proxmox
 packer init .
 packer build -var-file=rocky9.pkrvars.hcl \
-	-var="proxmox_url=$PROXMOX_URL" -var="username=$PROXMOX_USERNAME" \
-	-var='proxmox_name=ccdc-basebox-rocky-9.8-new' \
-	-var='node_name=px01' -var='storage_pool=synology01' \
-	-var='iso_storage_pool=synology01' -var='additional_iso_storage_pool=synology01' \
-	-var='iso_file=synology01:iso/Rocky-9.8-x86_64-minimal.iso' \
-	-var='bridge=vmbr1' -var='vlan_tag=26' -var='model=virtio' \
-	-var='insecure_skip_tls_verify=true' .
+ -var="proxmox_url=$PROXMOX_URL" -var="username=$PROXMOX_USERNAME" \
+ -var='proxmox_name=ccdc-basebox-rocky-9.8-new' \
+ -var='node_name=px01' -var='storage_pool=synology01' \
+ -var='iso_storage_pool=synology01' -var='additional_iso_storage_pool=synology01' \
+ -var='iso_file=synology01:iso/Rocky-9.8-x86_64-minimal.iso' \
+ -var='bridge=vmbr1' -var='vlan_tag=26' -var='model=virtio' \
+ -var='insecure_skip_tls_verify=true' .
 ```
 
 The installer uses DHCP, disables the firewall, sets SELinux to permissive and
