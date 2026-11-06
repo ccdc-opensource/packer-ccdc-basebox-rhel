@@ -1,0 +1,21 @@
+
+proxmox_name                = "ccdc-basebox-rocky-8.10"
+node_name                   = ""
+proxmox_url                 = ""
+storage_pool                = ""
+iso_file                    = ""
+iso_storage_pool            = ""
+iso_url                     = "https://mirrors.melbourne.co.uk/rocky/8.10/isos/x86_64/Rocky-8.10-x86_64-minimal.iso"
+additional_iso_storage_pool = ""
+iso_checksum                = "sha256:231d21db029e900b305d8e23ff7a61d06bb4e873cb170bd4a85f4e6dd896748f"
+disk_size                   = "30G"
+cpus                        = 2
+ram_mb                      = 4096
+bridge                      = ""
+vlan_tag                    = 0
+model                       = ""
+disk_format                 = "raw"
+username                    = ""
+kickstart_file              = "../http/proxmox/rocky-8/ks.cfg"
+ansible_python_interpreter  = "/usr/libexec/platform-python"
+ansible_requirements_file   = "../ansible_provisioning/requirements-rocky8.yaml"

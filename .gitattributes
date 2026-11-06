@@ -1,0 +1,3 @@
+http/proxmox/rocky-8/ks.cfg text eol=lf
+http/proxmox/rocky-9/ks.cfg text eol=lf
+README.md text eol=lf

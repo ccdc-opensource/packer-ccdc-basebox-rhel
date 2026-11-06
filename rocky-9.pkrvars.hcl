@@ -1,8 +1,0 @@
-iso_url = "https://mirrors.melbourne.co.uk/rocky/9.8/isos/x86_64/Rocky-9.8-x86_64-minimal.iso"
-iso_checksum = "sha256:d338032cd1cdd41c67139f2f71b4c832c8e4a21943106519db9c7137df7a63d4"
-vagrant_box = "ccdc-basebox/rocky-9.8"
-output_directory = "output/rocky-9.8/"
-kickstart_file = "/rocky-9/ks.cfg"
-vmware_guest_os_type = "centos-64"
-vsphere_guest_os_type = "rockylinux_64Guest"
-vsphere_name = "ccdc-basebox-rocky-9.8"
