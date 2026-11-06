@@ -74,7 +74,7 @@ Download the Rocky Linux 8.10 and 9.8 minimal ISOs from the
 ISO-enabled storage on Proxmox. Set `iso_file` to the matching Proxmox ISO volume
 ID, for example `local:iso/Rocky-8.10-x86_64-minimal.iso`.
 
-With the Rocky 8 Ansible environment active, initialize and build Rocky 8:
+With the Rocky 8 Ansible environment active, initialise and build Rocky 8:
 
 ```sh
 cd proxmox
