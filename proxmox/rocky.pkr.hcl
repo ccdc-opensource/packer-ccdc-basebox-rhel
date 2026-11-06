@@ -74,24 +74,6 @@ source "proxmox-iso" "rocky-kickstart" {
 build {
   sources = ["source.proxmox-iso.rocky-kickstart"]
 
-  provisioner "shell" {
-    inline = [
-      "if [ -r /etc/os-release ]; then . /etc/os-release; fi",
-      "case \"$ID:$VERSION_ID\" in rocky:8|rocky:8.*)",
-      "  echo 'Rocky 8 DNF diagnostics:'",
-      "  rpm -q python3-dnf || true",
-      "  for python in /usr/libexec/platform-python /usr/bin/python3 /usr/bin/python; do",
-      "    echo \"Checking $python\"",
-      "    if [ -x \"$python\" ]; then",
-      "      \"$python\" -c 'import sys; print(sys.version); import dnf; print(dnf.__file__)' 2>&1 || true",
-      "    else",
-      "      echo 'Not installed'",
-      "    fi",
-      "  done",
-      "  ;; esac",
-    ]
-  }
-
   provisioner "ansible" {
     playbook_file        = var.ansible_playbook_file
     galaxy_file          = var.ansible_requirements_file
