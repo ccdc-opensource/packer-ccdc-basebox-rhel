@@ -49,9 +49,24 @@ variable "iso_storage_pool" {
   default = "local"
 }
 
-variable "network_bridge" {
+variable "additional_iso_storage_pool" {
+  type    = string
+  default = ""
+}
+
+variable "bridge" {
   type    = string
   default = "vmbr1"
+}
+
+variable "model" {
+  type    = string
+  default = "virtio"
+}
+
+variable "vlan_tag" {
+  type    = number
+  default = 0
 }
 
 variable "cpus" {

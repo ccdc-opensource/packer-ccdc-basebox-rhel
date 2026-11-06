@@ -58,15 +58,16 @@ source "proxmox-iso" "rocky-kickstart" {
   additional_iso_files {
     type             = "ide"
     index            = "1"
-    iso_storage_pool = var.iso_storage_pool
+    iso_storage_pool = var.additional_iso_storage_pool
     cd_files         = [var.kickstart_file]
     cd_label         = "OEMDRV"
     unmount          = true
   }
 
   network_adapters {
-    bridge = var.network_bridge
-    model  = "virtio"
+    bridge   = var.bridge
+    model    = var.model
+    vlan_tag = var.vlan_tag
   }
 }
 
