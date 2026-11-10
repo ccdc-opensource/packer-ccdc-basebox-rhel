@@ -86,7 +86,7 @@ variable "disk_size" {
 
 variable "disk_format" {
   type    = string
-  default = "raw"
+  default = "qcow2"
 }
 
 variable "iso_url" {
