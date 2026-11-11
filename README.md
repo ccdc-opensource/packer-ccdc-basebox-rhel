@@ -121,7 +121,9 @@ creates a `vagrant` account with password `vagrant` and passwordless sudo for
 provisioning. Secure the resulting templates and clones before use. The separate
 Proxmox Rocky 8 and 9 kickstarts share the installation and provisioning setup
 based on Rocky 8, while retaining version-specific package exclusions. Both use
-automatic LVM partitioning rather than a fixed 16 GB swap volume.
+the same explicit LVM layout as the non-Proxmox Rocky kickstarts, including a
+fixed 16 GiB swap LV and a separate `/boot` partition. The volume group is named
+`vg_system` with logical volumes `root` and `swap` for cleaner LVM naming.
 
 Both Proxmox kickstarts exclude Intel Wi-Fi firmware using `iwl*-firmware`
 and explicitly exclude ALSA firmware without excluding audio libraries or

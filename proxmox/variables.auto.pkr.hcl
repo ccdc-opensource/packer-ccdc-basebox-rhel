@@ -41,7 +41,7 @@ variable "proxmox_name" {
 
 variable "storage_pool" {
   type    = string
-  default = "local-lvm"
+  default = ""
 }
 
 variable "iso_storage_pool" {
