@@ -9,6 +9,7 @@
 # vlan_tag = ""
 # model = ""
 # username = ""
+# ansible_requirements_file = ""
 
 # Default values
 proxmox_name                = "ccdc-basebox-rocky-9.8"
