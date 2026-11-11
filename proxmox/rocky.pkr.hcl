@@ -15,7 +15,7 @@ packer {
 }
 
 source "proxmox-iso" "rocky-kickstart" {
-  boot_command         = ["<up><tab> inst.text inst.ks=hd:LABEL=OEMDRV:/ks.cfg<enter>"]
+  boot_command         = ["<up><tab> inst.text inst.ks=hd:sr1:/ks.cfg<enter>"]
   boot_wait            = "10s"
   boot                 = "order=scsi0;ide0;ide1;net0"
   bios                 = "seabios"
@@ -27,7 +27,6 @@ source "proxmox-iso" "rocky-kickstart" {
   node                 = var.node_name
   proxmox_url          = var.proxmox_url
   username             = var.username
-  token                = var.token
   ssh_password         = "vagrant"
   ssh_timeout          = "15m"
   ssh_username         = "vagrant"
@@ -60,7 +59,7 @@ source "proxmox-iso" "rocky-kickstart" {
     index            = "1"
     iso_storage_pool = var.additional_iso_storage_pool
     cd_files         = [var.kickstart_file]
-    cd_label         = "OEMDRV"
+    cd_label         = "packer"
     unmount          = true
   }
 

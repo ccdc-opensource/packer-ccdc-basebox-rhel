@@ -41,7 +41,7 @@ variable "proxmox_name" {
 
 variable "storage_pool" {
   type    = string
-  default = "local-lvm"
+  default = ""
 }
 
 variable "iso_storage_pool" {
@@ -86,7 +86,7 @@ variable "disk_size" {
 
 variable "disk_format" {
   type    = string
-  default = "raw"
+  default = "qcow2"
 }
 
 variable "iso_url" {
