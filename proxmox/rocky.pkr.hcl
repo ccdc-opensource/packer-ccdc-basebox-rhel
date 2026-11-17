@@ -15,31 +15,34 @@ packer {
 }
 
 source "proxmox-iso" "rocky-kickstart" {
-  boot_command         = ["<up><tab> inst.text inst.ks=hd:sr1:/ks.cfg<enter>"]
-  boot_wait            = "10s"
-  boot                 = "order=scsi0;ide0;ide1;net0"
-  bios                 = "seabios"
-  cores                = var.cpus
-  memory               = var.ram_mb
-  vm_name              = var.proxmox_name
-  cpu_type             = "host"
-  os                   = "l26"
-  node                 = var.node_name
-  proxmox_url          = var.proxmox_url
-  username             = var.username
-  ssh_password         = "vagrant"
-  ssh_timeout          = "15m"
-  ssh_username         = "vagrant"
-  qemu_agent           = true
-  scsi_controller      = "virtio-scsi-pci"
-  template_description = "${var.proxmox_name}, generated on ${timestamp()}"
-  template_name        = var.proxmox_name
+  boot_command            = ["<up><tab> inst.text inst.ks=hd:sr1:/ks.cfg<enter>"]
+  boot_wait               = "10s"
+  boot                    = "order=scsi0;ide0;ide1;net0"
+  bios                    = "seabios"
+  cores                   = var.cpus
+  memory                  = var.ram_mb
+  vm_name                 = var.proxmox_name
+  cpu_type                = "host"
+  os                      = "l26"
+  node                    = var.node_name
+  proxmox_url             = var.proxmox_url
+  username                = var.username
+  cloud_init              = true
+  cloud_init_storage_pool = var.storage_pool
+  cloud_init_disk_type    = "ide"
+  ssh_password            = "vagrant"
+  ssh_timeout             = "15m"
+  ssh_username            = "vagrant"
+  qemu_agent              = true
+  scsi_controller         = "virtio-scsi-pci"
+  template_description    = "${var.proxmox_name}, generated on ${timestamp()}"
+  template_name           = var.proxmox_name
   disks {
-    disk_size           = var.disk_size
-    storage_pool        = var.storage_pool
-    type                = "scsi"
-    exclude_from_backup = true
-    format              = var.disk_format
+    disk_size             = var.disk_size
+    storage_pool          = var.storage_pool
+    type                  = "scsi"
+    exclude_from_backup   = true
+    format                = var.disk_format
   }
 
   insecure_skip_tls_verify = var.insecure_skip_tls_verify
@@ -72,6 +75,11 @@ source "proxmox-iso" "rocky-kickstart" {
 
 build {
   sources = ["source.proxmox-iso.rocky-kickstart"]
+   
+  provisioner "shell" {
+    execute_command = "sudo bash '{{ .Path }}'"
+    inline          = ["cloud-init status --wait"]
+  }
 
   provisioner "ansible" {
     playbook_file        = var.ansible_playbook_file
@@ -87,6 +95,12 @@ build {
       "ansible_ssh_password=vagrant",
       "-e",
       "ansible_python_interpreter=${var.ansible_python_interpreter}",
+      "-e",
+      "{\"packer_proxmox_cloud_init\":true}",
     ]
+  }
+  provisioner "shell" {
+    execute_command = "sudo bash '{{ .Path }}'"
+    script          = "${path.root}/scripts/prepare-cloud-init.sh"
   }
 }
